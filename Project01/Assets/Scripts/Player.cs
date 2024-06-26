@@ -43,6 +43,8 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        if (Time.timeScale == 0) return;
+        
         Move();                 // 키보드 입력에 따라 이동
         CameraRotation();       // 마우스를 위아래(Y) 움직임에 따라 카메라 X 축 회전 
         CharacterRotation();    // 마우스 좌우(X) 움직임에 따라 캐릭터 Y 축 회전 
