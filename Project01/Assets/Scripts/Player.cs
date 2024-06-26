@@ -7,10 +7,14 @@ using UnityEngine.EventSystems;
 public class Player : MonoBehaviour
 {
     private Rigidbody rigidbody;
+
+    private Animator _animator;
     
     [Header("플레이어 속도")]
     [SerializeField]
     private float speed;
+    private bool isMoving;
+    public float normalSpeed, runSpeed;
 
     [Header("카메라 속도")]
     [SerializeField]
@@ -33,6 +37,7 @@ public class Player : MonoBehaviour
     void Start() 
     {
         rigidbody = GetComponent<Rigidbody>();
+        _animator = GetComponent<Animator>();
         isJump = false;
     }
 
@@ -54,6 +59,26 @@ public class Player : MonoBehaviour
         Vector3 velocity = (moveHorizontal + moveVertical).normalized * speed; 
 
         rigidbody.MovePosition(transform.position + velocity * Time.deltaTime);
+
+        if (moveDirX == 0 && moveDirZ == 0)
+        {
+            _animator.SetBool("isWalk", false);
+        }
+        else
+        {
+            _animator.SetBool("isWalk", true);
+        }
+
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            speed = runSpeed;
+            _animator.SetBool("isRun", true);
+        }
+        else
+        {
+            speed = normalSpeed;
+            _animator.SetBool("isRun", false);
+        }
     }
 
     private void CameraRotation()  
@@ -82,6 +107,7 @@ public class Player : MonoBehaviour
             {
                 isJump = true;
                 rigidbody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+                _animator.SetBool("isJump", true);
             }
         }
     }
@@ -91,6 +117,7 @@ public class Player : MonoBehaviour
         if (collision.gameObject.tag == "Ground")
         {
             isJump = false;
+            _animator.SetBool("isJump", false);
         }
     }
 }
