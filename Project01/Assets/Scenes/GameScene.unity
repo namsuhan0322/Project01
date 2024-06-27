@@ -1274,6 +1274,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _pauseMenu: {fileID: 87430286}
+  inventory: {fileID: 1209915722}
 --- !u!4 &923249307
 Transform:
   m_ObjectHideFlags: 0
@@ -1816,7 +1817,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fd228f6ebd9d6040bbf84639d1e4ac2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  go_SlotsParent: {fileID: 1209915722}
+  inventory_Slots: {fileID: 1209915722}
 --- !u!1 &1246650253
 GameObject:
   m_ObjectHideFlags: 0
