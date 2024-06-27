@@ -16,6 +16,11 @@ public class Inventory : MonoBehaviour
         slots = inventory_Slots.GetComponentsInChildren<Slot>();
     }
 
+    void Update()
+    {
+        HandleSlotSelection();
+    }
+    
     public void AddItemToInventory(Item item)
     {
         foreach (Slot slot in slots)
@@ -25,6 +30,34 @@ public class Inventory : MonoBehaviour
                 slot.AddItem(item);
                 break;
             }
+        }
+    }
+    
+    private void HandleSlotSelection()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            HighlightSlot(0);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            HighlightSlot(1);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            HighlightSlot(2);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            HighlightSlot(3);
+        }
+    }
+    
+    private void HighlightSlot(int index)
+    {
+        for (int i = 0; i < slots.Length; i++)
+        {
+            slots[i].SetHighlight(i == index);
         }
     }
 }

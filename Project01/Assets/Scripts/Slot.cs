@@ -7,10 +7,13 @@ public class Slot : MonoBehaviour
 {
     public Item item; // 획득한 아이템
     public Image itemImage;  // 아이템의 이미지
-    
+    [SerializeField]
+    private GameObject highlight; // Highlight 이미지 (Inventory_Selection)
+
     void Start()
     {
         SetColor(0);
+        SetHighlight(false);
     }
 
     // 아이템 이미지의 투명도 조절
@@ -35,5 +38,13 @@ public class Slot : MonoBehaviour
         item = null;
         itemImage.sprite = null;
         SetColor(0);
+    }
+
+    public void SetHighlight(bool isActive)
+    {
+        if (highlight != null)
+        {
+            highlight.SetActive(isActive);
+        }
     }
 }
