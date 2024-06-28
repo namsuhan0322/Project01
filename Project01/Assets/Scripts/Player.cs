@@ -121,5 +121,11 @@ public class Player : MonoBehaviour
             isJump = false;
             _animator.SetBool("isJump", false);
         }
+        
+        if (collision.gameObject.tag == "Item")
+        {
+            Physics.IgnoreCollision(collision.collider, GetComponent<Collider>());
+            Debug.Log("아이템 통과");
+        }
     }
 }

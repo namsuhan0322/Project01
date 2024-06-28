@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class Inventory : MonoBehaviour
 {
-    public static bool inventoryActivated = false;  // 인벤토리 활성화 여부. true가 되면 카메라 움직임과 다른 입력을 막을 것이다.
-
+    public static bool inventoryActivated = false;
     [SerializeField]
     private GameObject inventory_Slots;
-
-    private Slot[] slots;  // 슬롯들 배열
+    private Slot[] slots;
+    private int selectedIndex = -1;
+    
+    [SerializeField]
+    private Transform dropPosition;  // 드롭 위치를 위한 트랜스폼 변수
 
     void Start()
     {
@@ -19,8 +21,9 @@ public class Inventory : MonoBehaviour
     void Update()
     {
         HandleSlotSelection();
+        HandleItemDrop();
     }
-    
+
     public void AddItemToInventory(Item item)
     {
         foreach (Slot slot in slots)
@@ -32,7 +35,7 @@ public class Inventory : MonoBehaviour
             }
         }
     }
-    
+
     private void HandleSlotSelection()
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
@@ -52,12 +55,37 @@ public class Inventory : MonoBehaviour
             HighlightSlot(3);
         }
     }
-    
+
     private void HighlightSlot(int index)
     {
+        selectedIndex = index;
         for (int i = 0; i < slots.Length; i++)
         {
             slots[i].SetHighlight(i == index);
+        }
+    }
+
+    private void HandleItemDrop()
+    {
+        if (Input.GetKeyDown(KeyCode.F) && selectedIndex != -1)
+        {
+            Slot selectedSlot = slots[selectedIndex];
+            if (selectedSlot.item != null)
+            {
+                DropItem(selectedSlot);
+            }
+        }
+    }
+
+    private void DropItem(Slot slot)
+    {
+        Item itemToDrop = slot.item;
+        slot.ClearSlot();
+        
+        // 플레이어의 자식 오브젝트 위치에 드롭
+        if (dropPosition != null)
+        {
+            Instantiate(itemToDrop.itemPrefab, dropPosition.position, Quaternion.identity);
         }
     }
 }
