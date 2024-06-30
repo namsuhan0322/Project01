@@ -613,7 +613,6 @@ GameObject:
   - component: {fileID: 402544411}
   - component: {fileID: 402544410}
   - component: {fileID: 402544409}
-  - component: {fileID: 402544413}
   m_Layer: 9
   m_Name: Scan
   m_TagString: Scan
@@ -709,19 +708,6 @@ Transform:
   - {fileID: 957648524}
   m_Father: {fileID: 1132566289}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &402544413
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 402544408}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f79bdc1d6762dc64d911bb8eda9cad1a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isScanning: 0
 --- !u!1 &468755561
 GameObject:
   m_ObjectHideFlags: 0
