@@ -11,6 +11,8 @@ public class Player : MonoBehaviour
 
     public GameObject scanObj;
 
+    public int allPrice;
+
     [Header("플레이어 속도")]
     [SerializeField]
     private float speed;
@@ -43,6 +45,7 @@ public class Player : MonoBehaviour
         _animator = GetComponent<Animator>();
         isJump = false;
         scanObj.SetActive(false);
+        allPrice = 0;
     }
 
     void Update()
@@ -145,6 +148,8 @@ public class Player : MonoBehaviour
             scanObj.SetActive(false);
             scanObj.transform.localScale = Vector3.one;
             isScanning = false;
+            
+            allPrice = 0; // 스캔 완료 후 가격 초기화
         });
     }
 
@@ -153,15 +158,15 @@ public class Player : MonoBehaviour
         if (other.gameObject.CompareTag("Item"))
         {
             ItemPickUp itemPickUp = other.GetComponent<ItemPickUp>();
-
+            
             if (itemPickUp != null)
             {
                 Debug.Log($"아이템 이름: {itemPickUp.item.itemName}");
-                Debug.Log($"아이템 유형: {itemPickUp.item.itemType}");
                 Debug.Log($"아이템 가격: {itemPickUp.item.Value}");
+                
+                allPrice += itemPickUp.item.Value;
+                Debug.Log($"총 아이템 가격: {allPrice}");
             }
-
-            Debug.Log($"아이템을 스캔함");
         }
     }
 }
