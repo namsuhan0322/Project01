@@ -1,15 +1,16 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using DG.Tweening;
 
 public class Player : MonoBehaviour
 {
     private Rigidbody rigidbody;
-
     private Animator _animator;
-    
+
+    public GameObject scanObj;
+
     [Header("플레이어 속도")]
     [SerializeField]
     private float speed;
@@ -18,47 +19,51 @@ public class Player : MonoBehaviour
 
     [Header("카메라 속도")]
     [SerializeField]
-    private float lookSensitivity; 
+    private float lookSensitivity;
 
     [Header("카메라 가동범위")]
     [SerializeField]
-    private float cameraRotationLimit;  
-    private float currentCameraRotationX;  
+    private float cameraRotationLimit;
+    private float currentCameraRotationX;
 
     [Header("카메라")]
     [SerializeField]
     private Camera theCamera;
-    
+
     [Header("플레이어 점프")]
     [SerializeField]
     private float jumpForce;
     private bool isJump;
-    
-    void Start() 
+
+    private bool isScanning = false;
+
+    void Start()
     {
         rigidbody = GetComponent<Rigidbody>();
         _animator = GetComponent<Animator>();
         isJump = false;
+        scanObj.SetActive(false);
     }
 
     void Update()
     {
         if (Time.timeScale == 0) return;
-        
-        Move();                 // 키보드 입력에 따라 이동
-        CameraRotation();       // 마우스를 위아래(Y) 움직임에 따라 카메라 X 축 회전 
-        CharacterRotation();    // 마우스 좌우(X) 움직임에 따라 캐릭터 Y 축 회전 
-        Jump();                 // 스페이스 입력시 점프
+
+        Move();
+        CameraRotation();
+        CharacterRotation();
+        Jump();
+        StartScan();
     }
 
     private void Move()
     {
-        float moveDirX = Input.GetAxisRaw("Horizontal");  
-        float moveDirZ = Input.GetAxisRaw("Vertical");  
-        Vector3 moveHorizontal = transform.right * moveDirX; 
-        Vector3 moveVertical = transform.forward * moveDirZ; 
+        float moveDirX = Input.GetAxisRaw("Horizontal");
+        float moveDirZ = Input.GetAxisRaw("Vertical");
+        Vector3 moveHorizontal = transform.right * moveDirX;
+        Vector3 moveVertical = transform.forward * moveDirZ;
 
-        Vector3 velocity = (moveHorizontal + moveVertical).normalized * speed; 
+        Vector3 velocity = (moveHorizontal + moveVertical).normalized * speed;
 
         rigidbody.MovePosition(transform.position + velocity * Time.deltaTime);
 
@@ -83,25 +88,25 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void CameraRotation()  
+    private void CameraRotation()
     {
-        float xRotation = Input.GetAxisRaw("Mouse Y"); 
+        float xRotation = Input.GetAxisRaw("Mouse Y");
         float cameraRotationX = xRotation * lookSensitivity;
-        
+
         currentCameraRotationX -= cameraRotationX;
         currentCameraRotationX = Mathf.Clamp(currentCameraRotationX, -cameraRotationLimit, cameraRotationLimit);
 
         theCamera.transform.localEulerAngles = new Vector3(currentCameraRotationX, 0f, 0f);
     }
 
-    private void CharacterRotation()  // 좌우 캐릭터 회전
+    private void CharacterRotation()
     {
         float yRotation = Input.GetAxisRaw("Mouse X");
         Vector3 characterRotationY = new Vector3(0f, yRotation, 0f) * lookSensitivity;
         rigidbody.MoveRotation(rigidbody.rotation * Quaternion.Euler(characterRotationY));
     }
 
-    void Jump()
+    private void Jump()
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -120,6 +125,43 @@ public class Player : MonoBehaviour
         {
             isJump = false;
             _animator.SetBool("isJump", false);
+        }
+    }
+
+    private void StartScan()
+    {
+        if (Input.GetKeyDown(KeyCode.R) && !isScanning)
+        {
+            isScanning = true;
+            scanObj.SetActive(true);
+            Scan();
+        }
+    }
+
+    private void Scan()
+    {
+        scanObj.transform.DOScale(new Vector3(40, 40, 40), 2).OnComplete(() =>
+        {
+            scanObj.SetActive(false);
+            scanObj.transform.localScale = Vector3.one;
+            isScanning = false;
+        });
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Item"))
+        {
+            ItemPickUp itemPickUp = other.GetComponent<ItemPickUp>();
+
+            if (itemPickUp != null)
+            {
+                Debug.Log($"아이템 이름: {itemPickUp.item.itemName}");
+                Debug.Log($"아이템 유형: {itemPickUp.item.itemType}");
+                Debug.Log($"아이템 가격: {itemPickUp.item.Value}");
+            }
+
+            Debug.Log($"아이템을 스캔함");
         }
     }
 }
