@@ -9,14 +9,18 @@ public class Inventory : MonoBehaviour
     private GameObject inventory_Slots;
     private Slot[] slots;
     private int selectedIndex = -1;
-    
+
     [SerializeField]
-    private Transform dropPosition;  // 드롭 위치를 위한 트랜스폼 변수
+    private Transform dropPosition;
     [SerializeField]
-    private Transform[] shopDropPositions;  // 샵 드롭 위치를 위한 트랜스폼 배열 변수
+    private Transform[] shopDropPositions;
 
     private DropZone dropZone;
     private int currentShopDropIndex = 0;
+    private int totalDroppedItems = 0;
+    private int totalPrice = 0;
+    
+    private HashSet<Item> droppedItems = new HashSet<Item>();
 
     void Start()
     {
@@ -88,15 +92,31 @@ public class Inventory : MonoBehaviour
         Item itemToDrop = slot.item;
         slot.ClearSlot();
 
+        bool isNewDrop = !droppedItems.Contains(itemToDrop);
+
         if (dropZone != null && dropZone.IsPlayerInZone())
         {
             Transform dropPos = shopDropPositions[currentShopDropIndex];
             Instantiate(itemToDrop.itemPrefab, dropPos.position, Quaternion.identity);
             currentShopDropIndex = (currentShopDropIndex + 1) % shopDropPositions.Length;
+
+            if (isNewDrop)
+            {
+                totalPrice += itemToDrop.Value;
+                droppedItems.Add(itemToDrop);
+            }
         }
         else if (dropPosition != null)
         {
             Instantiate(itemToDrop.itemPrefab, dropPosition.position, Quaternion.identity);
         }
+
+        if (isNewDrop)
+        {
+            totalDroppedItems++;
+        }
+
+        Debug.Log($"총 갯수: {totalDroppedItems}");
+        Debug.Log($"총 가격: {totalPrice}");
     }
 }
