@@ -12,10 +12,16 @@ public class Inventory : MonoBehaviour
     
     [SerializeField]
     private Transform dropPosition;  // 드롭 위치를 위한 트랜스폼 변수
+    [SerializeField]
+    private Transform[] shopDropPositions;  // 샵 드롭 위치를 위한 트랜스폼 배열 변수
+
+    private DropZone dropZone;
+    private int currentShopDropIndex = 0;
 
     void Start()
     {
         slots = inventory_Slots.GetComponentsInChildren<Slot>();
+        dropZone = FindObjectOfType<DropZone>();
     }
 
     void Update()
@@ -81,9 +87,14 @@ public class Inventory : MonoBehaviour
     {
         Item itemToDrop = slot.item;
         slot.ClearSlot();
-        
-        // 플레이어의 자식 오브젝트 위치에 드롭
-        if (dropPosition != null)
+
+        if (dropZone != null && dropZone.IsPlayerInZone())
+        {
+            Transform dropPos = shopDropPositions[currentShopDropIndex];
+            Instantiate(itemToDrop.itemPrefab, dropPos.position, Quaternion.identity);
+            currentShopDropIndex = (currentShopDropIndex + 1) % shopDropPositions.Length;
+        }
+        else if (dropPosition != null)
         {
             Instantiate(itemToDrop.itemPrefab, dropPosition.position, Quaternion.identity);
         }

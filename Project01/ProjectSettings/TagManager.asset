@@ -7,6 +7,7 @@ TagManager:
   - Ground
   - Item
   - Scan
+  - DropZone
   layers:
   - Default
   - TransparentFX
@@ -18,7 +19,7 @@ TagManager:
   - Weapone
   - Player
   - Scan
-  - 
+  - DropZone
   - 
   - 
   - 
