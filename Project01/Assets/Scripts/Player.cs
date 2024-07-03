@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using DG.Tweening;
 
 public class Player : MonoBehaviour
@@ -161,8 +160,8 @@ public class Player : MonoBehaviour
             
             if (itemPickUp != null)
             {
-                Debug.Log($"아이템 이름: {itemPickUp.item.itemName}");
-                Debug.Log($"아이템 가격: {itemPickUp.item.Value}");
+                Debug.Log($"이름 : {itemPickUp.item.itemName}");
+                Debug.Log($"가격 : {itemPickUp.item.Value}");
                 
                 allPrice += itemPickUp.item.Value;
                 Debug.Log($"총 아이템 가격: {allPrice}");

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Inventory : MonoBehaviour
 {
@@ -22,10 +23,14 @@ public class Inventory : MonoBehaviour
     private int totalDroppedItems = 0; // 총 드롭된 아이템 수
     private int totalPrice = 0; // 총 판매 가격
 
+    [SerializeField]
+    private Text currentBalanceText; // 현재 잔고를 표시하는 텍스트 UI
+
     void Start()
     {
         slots = inventory_Slots.GetComponentsInChildren<Slot>(); // 슬롯 배열 초기화
         dropZone = FindObjectOfType<DropZone>(); // 드랍 존 스크립트 초기화
+        UpdateBalanceText(); // 잔고 텍스트 업데이트
     }
 
     void Update()
@@ -44,7 +49,7 @@ public class Inventory : MonoBehaviour
                 return true;
             }
         }
-        Debug.Log("아이템이 가득 찾습니다!"); // 모든 슬롯이 찼을 때 메시지 출력
+        Debug.Log("아이템이 가득 찼습니다!"); // 모든 슬롯이 찼을 때 메시지 출력
         return false;
     }
 
@@ -102,15 +107,25 @@ public class Inventory : MonoBehaviour
             currentShopDropIndex = (currentShopDropIndex + 1) % shopDropPositions.Length; // 다음 상점 드롭 위치 인덱스로 변경
 
             totalPrice += itemToDrop.Value; // 판매 가격 추가
+            
+            Destroy(droppedItem, 3f); // 일정 시간 후 아이템 삭제
+            
+            Invoke("UpdateBalanceText", 5f); // 일성 시간 후 정산 (이건 이제 벨을 눌렀을때 아이템을 3 ~ 5초에 전체 삭제 시키고 랜덤으로 5 ~ 10초 사이에 정산으로 바뀔예정)
         }
         else if (dropPosition != null) // 드롭 존에 없는 경우
         {
             Instantiate(itemToDrop.itemPrefab, dropPosition.position, Quaternion.identity); // 기본 위치에 아이템 드롭
         }
-
+        
         totalDroppedItems++; // 총 드롭된 아이템 수 증가
 
         Debug.Log($"총 갯수: {totalDroppedItems}"); // 드롭된 아이템 수 로그 출력
         Debug.Log($"총 가격: {totalPrice}"); // 총 판매 가격 로그 출력
+        //UpdateBalanceText(); // 잔고 텍스트 업데이트
+    }
+
+    private void UpdateBalanceText()
+    {
+        currentBalanceText.text = $"현재 잔고: {totalPrice}$"; // 잔고 텍스트 업데이트
     }
 }
