@@ -1,10 +1,35 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ItemPickUp : MonoBehaviour
 {
     public Item item;
+    public GameObject itemInfoObj;
+
+    public Text itemName;
+    public Text itemValue;
+
+    private Player player;
+
+    void Start()
+    {
+        player = FindObjectOfType<Player>();
+        player.RegisterItemPickUp(this);
+    }
+    
+    void Update()
+    {
+        // UI가 항상 카메라를 바라보도록 설정
+        itemInfoObj.transform.LookAt(Camera.main.transform);
+        itemInfoObj.transform.Rotate(0, 180, 0); // LookAt이 반대로 설정되어 있으면 180도 회전
+    }
+    
+    void OnDestroy()
+    {
+        player.UnregisterItemPickUp(this);
+    }
 
     void OnTriggerEnter(Collider other)
     {
@@ -24,5 +49,20 @@ public class ItemPickUp : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void ScanningItemInfo()
+    {
+        if (player.isScanning)
+        {
+            itemInfoObj.SetActive(true);
+            itemName.text = $"이름 : {item.itemName}";
+            itemValue.text = $"가격 : {item.Value}";
+        }
+    }
+
+    public void FinishScanning()
+    {
+        itemInfoObj.SetActive(false);
     }
 }

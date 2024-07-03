@@ -36,7 +36,9 @@ public class Player : MonoBehaviour
     private float jumpForce;
     private bool isJump;
 
-    private bool isScanning = false;
+    public bool isScanning = false;
+
+    private List<ItemPickUp> itemPickUps = new List<ItemPickUp>();
 
     void Start()
     {
@@ -140,14 +142,36 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void Scan()
+    public void RegisterItemPickUp(ItemPickUp itemPickUp)
+    {
+        if (!itemPickUps.Contains(itemPickUp))
+        {
+            itemPickUps.Add(itemPickUp);
+        }
+    }
+
+    public void UnregisterItemPickUp(ItemPickUp itemPickUp)
+    {
+        if (itemPickUps.Contains(itemPickUp))
+        {
+            itemPickUps.Remove(itemPickUp);
+        }
+    }
+
+    public void Scan()
     {
         scanObj.transform.DOScale(new Vector3(40, 40, 40), 2).OnComplete(() =>
         {
             scanObj.SetActive(false);
             scanObj.transform.localScale = Vector3.one;
             isScanning = false;
-            
+
+            // 모든 ItemPickUp 객체의 FinishScanning 메서드를 호출하여 UI를 비활성화
+            foreach (ItemPickUp itemPickUp in itemPickUps)
+            {
+                itemPickUp.FinishScanning();
+            }
+
             allPrice = 0; // 스캔 완료 후 가격 초기화
         });
     }
@@ -157,12 +181,11 @@ public class Player : MonoBehaviour
         if (other.gameObject.CompareTag("Item"))
         {
             ItemPickUp itemPickUp = other.GetComponent<ItemPickUp>();
-            
+
             if (itemPickUp != null)
             {
-                Debug.Log($"이름 : {itemPickUp.item.itemName}");
-                Debug.Log($"가격 : {itemPickUp.item.Value}");
-                
+                itemPickUp.ScanningItemInfo();
+
                 allPrice += itemPickUp.item.Value;
                 Debug.Log($"총 아이템 가격: {allPrice}");
             }
