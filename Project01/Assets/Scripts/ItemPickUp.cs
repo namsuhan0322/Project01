@@ -21,9 +21,13 @@ public class ItemPickUp : MonoBehaviour
     
     void Update()
     {
-        // UI가 항상 카메라를 바라보도록 설정
-        itemInfoObj.transform.LookAt(Camera.main.transform);
-        itemInfoObj.transform.Rotate(0, 180, 0); // LookAt이 반대로 설정되어 있으면 180도 회전
+        // DroppedInShop 레이어인 경우 UI를 보이지 않도록 설정
+        if (itemInfoObj != null && itemInfoObj.layer != LayerMask.NameToLayer("DroppedInShop"))
+        {
+            // UI가 항상 카메라를 바라보도록 설정
+            itemInfoObj.transform.LookAt(Camera.main.transform);
+            itemInfoObj.transform.Rotate(0, 180, 0);
+        }
     }
     
     void OnDestroy()
@@ -53,7 +57,7 @@ public class ItemPickUp : MonoBehaviour
 
     public void ScanningItemInfo()
     {
-        if (player.isScanning)
+        if (player.isScanning && itemInfoObj != null && itemInfoObj.layer != LayerMask.NameToLayer("DroppedInShop"))
         {
             itemInfoObj.SetActive(true);
             itemName.text = $"이름 : {item.itemName}";

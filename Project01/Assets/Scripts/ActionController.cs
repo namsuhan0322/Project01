@@ -107,7 +107,7 @@ public class ActionController : MonoBehaviour
             {
                 if (hitInfo.transform != null && hitInfo.transform.CompareTag("Bell"))
                 {
-                    Debug.Log("눌렀습니다!");
+                    Debug.Log("벨을 눌렀습니다!");
                     StartCoroutine(inventory.ProcessSellItems());
                 }
             } 

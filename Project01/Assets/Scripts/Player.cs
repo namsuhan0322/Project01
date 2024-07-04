@@ -10,7 +10,7 @@ public class Player : MonoBehaviour
 
     public GameObject scanObj;
 
-    public int allPrice;
+    private int allPrice;
 
     [Header("플레이어 속도")]
     [SerializeField]
