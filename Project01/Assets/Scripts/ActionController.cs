@@ -99,6 +99,22 @@ public class ActionController : MonoBehaviour
         }
     }
 
+    /*private void CheckMouseClick()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out hitInfo))
+            {
+                if (hitInfo.transform != null && hitInfo.transform.CompareTag("Bell"))
+                {
+                    Debug.Log("눌렀습니다!");
+                    StartCoroutine(ProcessSellItems());
+                }
+            }
+        }
+    }*/
+    
     private void CheckMouseClick()
     {
         if (Input.GetKeyDown(KeyCode.C))

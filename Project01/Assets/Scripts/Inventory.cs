@@ -118,9 +118,6 @@ public class Inventory : MonoBehaviour
         }
 
         totalDroppedItems++;
-
-        Debug.Log($"총 갯수: {totalDroppedItems}");
-        Debug.Log($"총 가격: {totalPrice}");
     }
 
     public IEnumerator ProcessSellItems()
